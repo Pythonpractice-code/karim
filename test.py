@@ -51,8 +51,8 @@ if st.session_state.woordjes and not st.session_state.afgerond:
 
         # Highlight Spaans woord
         st.markdown(
-            f"<div style='background-color:#e6f2ff; padding:20px; margin:30px 0; border-radius:10px;'>"
-            f"<h2 style='text-align: center; color: #007acc; font-size: 36px;'>{spaans}</h2></div>",
+            f"<div style='background-color:#e6f2ff; padding:30px; margin:40px 0 20px 0; border-radius:10px;'>"
+            f"<h2 style='text-align: center; color: #007acc; font-size: 40px;'>{spaans}</h2></div>",
             unsafe_allow_html=True
         )
 
