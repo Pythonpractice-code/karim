@@ -1,7 +1,6 @@
 import streamlit as st
 import csv
 import random
-import time
 
 # Streamlit app configuratie
 st.set_page_config(page_title="📚 Spaanse Flashcards", page_icon="📘", layout="centered")
@@ -32,11 +31,6 @@ if "woordjes" not in st.session_state:
     st.session_state.moeilijk = []
     st.session_state.toon_antwoord = False
     st.session_state.afgerond = False
-    st.session_state.starttijd = time.time()
-
-# Timer berekenen
-def get_timer():
-    return int(time.time() - st.session_state.starttijd)
 
 # Toon flashcard-interface
 if st.session_state.woordjes and not st.session_state.afgerond:
@@ -60,26 +54,21 @@ if st.session_state.woordjes and not st.session_state.afgerond:
         if st.session_state.toon_antwoord:
             st.markdown(f"<h3 style='text-align: center; color: #333;'>{nederlands}</h3>", unsafe_allow_html=True)
 
-        # Timer
-        st.markdown(f"⏱️ Tijd bezig met dit woord: **{get_timer()} seconden**")
-
         # Knoppen
-        toon, goed, moeilijk, volgende = st.columns(4)
-        if toon.button("👁️ Toon antwoord"):
+        if st.button("👁️ Toon antwoord", key="toon"):
             st.session_state.toon_antwoord = True
 
-        if goed.button("✅ Ik wist het"):
+        if st.button("✅ Ik wist het", key="goed"):
             st.session_state.score += 1
             st.session_state.toon_antwoord = True
 
-        if moeilijk.button("❗ Moeilijk"):
+        if st.button("❗ Moeilijk", key="moeilijk"):
             st.session_state.moeilijk.append((spaans, nederlands))
             st.session_state.toon_antwoord = True
 
-        if volgende.button("➡️ Volgende woord"):
+        if st.button("➡️ Volgende woord", key="volgende"):
             st.session_state.index += 1
             st.session_state.toon_antwoord = False
-            st.session_state.starttijd = time.time()
 
         st.markdown(f"**🎯 Score: {st.session_state.score} / {totaal}**")
 
@@ -100,7 +89,7 @@ if st.session_state.afgerond:
         for s, n in st.session_state.moeilijk:
             st.write(f"- {s} = {n}")
 
-        if st.button("🔁 Herhaal moeilijke woorden"):
+        if st.button("🔁 Herhaal moeilijke woorden", key="herhaal"):
             st.session_state.woordjes = st.session_state.moeilijk.copy()
             random.shuffle(st.session_state.woordjes)
             st.session_state.index = 0
@@ -108,9 +97,8 @@ if st.session_state.afgerond:
             st.session_state.moeilijk = []
             st.session_state.toon_antwoord = False
             st.session_state.afgerond = False
-            st.session_state.starttijd = time.time()
 
-    if st.button("🔄 Opnieuw beginnen"):
+    if st.button("🔄 Opnieuw beginnen", key="opnieuw"):
         st.session_state.woordjes = lees_standaard_woordjes()
         random.shuffle(st.session_state.woordjes)
         st.session_state.index = 0
@@ -118,4 +106,3 @@ if st.session_state.afgerond:
         st.session_state.moeilijk = []
         st.session_state.toon_antwoord = False
         st.session_state.afgerond = False
-        st.session_state.starttijd = time.time()
