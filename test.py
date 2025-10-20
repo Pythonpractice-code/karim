@@ -38,7 +38,7 @@ if "woordjes" not in st.session_state:
 def get_timer():
     return int(time.time() - st.session_state.starttijd)
 
-# Toon flashcard-interface
+# Flashcard-interface
 if st.session_state.woordjes and not st.session_state.afgerond:
     totaal = len(st.session_state.woordjes)
     index = st.session_state.index
@@ -66,20 +66,33 @@ if st.session_state.woordjes and not st.session_state.afgerond:
         # Knoppen
         toon, goed, moeilijk, volgende = st.columns(4)
         if toon.button("👁️ Toon antwoord"):
-            st.session_state.toon_antwoord = True
-
+            st.session_state.klik_toon = True
         if goed.button("✅ Ik wist het"):
+            st.session_state.klik_goed = True
+        if moeilijk.button("❗ Moeilijk"):
+            st.session_state.klik_moeilijk = True
+        if volgende.button("➡️ Volgende woord"):
+            st.session_state.klik_volgende = True
+
+        # Verwerk acties
+        if st.session_state.get("klik_toon"):
+            st.session_state.toon_antwoord = True
+            st.session_state.klik_toon = False
+
+        if st.session_state.get("klik_goed"):
             st.session_state.score += 1
             st.session_state.toon_antwoord = True
-
-        if moeilijk.button("❗ Moeilijk"):
+            st.session_state.klik_goed = False
+        if st.session_state.get("klik_moeilijk"):
             st.session_state.moeilijk.append((spaans, nederlands))
             st.session_state.toon_antwoord = True
+            st.session_state.klik_moeilijk = False
 
-        if volgende.button("➡️ Volgende woord"):
+        if st.session_state.get("klik_volgende"):
             st.session_state.index += 1
             st.session_state.toon_antwoord = False
             st.session_state.starttijd = time.time()
+            st.session_state.klik_volgende = False
 
         st.markdown(f"**🎯 Score: {st.session_state.score} / {totaal}**")
 
